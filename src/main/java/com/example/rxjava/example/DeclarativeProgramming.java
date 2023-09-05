@@ -144,9 +144,20 @@ public class DeclarativeProgramming {
 //        Flux.fromIterable ( SampleData.carList )
 //            .takeUntil ( car -> car.getCarName ().equals ( "트랙스" ) )
 //            .subscribe ( car -> log.info ( "name : {}", car.getCarName () ) );
-        Flux.interval ( Duration.ofMillis ( 300 ) )
-            .skip ( Duration.ofMillis ( 1000 ) )
-            .subscribe ( data -> log.info ( "data : {}", data ) );
-        TimeUtil.sleep ( 3000 );
+
+//        Flux.interval ( Duration.ofMillis ( 300 ) )
+//            .skip ( Duration.ofMillis ( 1000 ) )
+//            .subscribe ( data -> log.info ( "data : {}", data ) );
+//        TimeUtil.sleep ( 3000 );
+
+//        Flux.range ( 1, 15 )
+//                .skipLast ( 3 )
+//                .subscribe (data -> log.info ( ""+data ));
+        Flux.range ( 2, 8 )
+            .filter ( data -> data % 2 == 0 )
+            .flatMap ( up -> Flux.range ( 1, 9 )
+                                        .map ( down -> up + " * " + down + " = " + up * down ))
+            .subscribe (System.out::println);
+
     }
 }
