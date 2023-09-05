@@ -1,5 +1,8 @@
 package com.example.rxjava.example;
 
+import com.example.rxjava.example.common.Car;
+import com.example.rxjava.example.common.CarMaker;
+import com.example.rxjava.example.common.SampleData;
 import com.example.rxjava.example.utils.DateUtil;
 import com.example.rxjava.example.utils.LogType;
 import com.example.rxjava.example.utils.Logger;
@@ -124,5 +127,26 @@ public class DeclarativeProgramming {
 //
 //        log.info ( "# end time" );
 
+//        Flux.fromIterable ( SampleData.carList )
+//            .filter ( car -> car.getCarMaker () == CarMaker.CHEVROLET )
+//            .filter ( car -> car.getCarPrice () > 30000000 )
+//            .subscribe (car -> log.info(car.getCarMaker () + " : " + car.getCarName ()));
+
+//        Flux.fromIterable (SampleData.carList )
+//            .distinct ( Car::getCarMaker)
+//            .subscribe (car -> log.info(" Car Name : {} ", car.getCarName ()));
+
+//        Flux.interval ( Duration.ofMillis ( 1000 ) )
+//            .take ( Duration.ofMillis ( 3500 ) )
+//            .subscribe (data -> log.info ( "data : {}", data ));
+//        TimeUtil.sleep ( 3500 );
+
+//        Flux.fromIterable ( SampleData.carList )
+//            .takeUntil ( car -> car.getCarName ().equals ( "트랙스" ) )
+//            .subscribe ( car -> log.info ( "name : {}", car.getCarName () ) );
+        Flux.interval ( Duration.ofMillis ( 300 ) )
+            .skip ( Duration.ofMillis ( 1000 ) )
+            .subscribe ( data -> log.info ( "data : {}", data ) );
+        TimeUtil.sleep ( 3000 );
     }
 }
