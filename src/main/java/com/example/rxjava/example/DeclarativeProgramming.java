@@ -15,13 +15,12 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class DeclarativeProgramming {
@@ -153,11 +152,21 @@ public class DeclarativeProgramming {
 //        Flux.range ( 1, 15 )
 //                .skipLast ( 3 )
 //                .subscribe (data -> log.info ( ""+data ));
-        Flux.range ( 2, 8 )
-            .filter ( data -> data % 2 == 0 )
-            .flatMap ( up -> Flux.range ( 1, 9 )
-                                        .map ( down -> up + " * " + down + " = " + up * down ))
-            .subscribe (System.out::println);
 
+//        Flux.range ( 2, 8 )
+//            .filter ( data -> data % 2 == 0 )
+//            .flatMap ( up -> Flux.range ( 1, 9 )
+//                                        .map ( down -> up + " * " + down + " = " + up * down ))
+//            .subscribe (System.out::println);
+
+//        Flux <GroupedFlux <CarMaker, Car>> groupBy = Flux.fromIterable ( SampleData.carList )
+//                                                        .groupBy ( Car::getCarMaker );
+//        groupBy.subscribe (flux -> flux.sort ( Comparator.comparing ( Car::getCarMaker ) )
+//                                       .subscribe (
+//                    car -> log.info ( "group : {}", flux.key () + "\t Car name : " + car.getCarName () ) ));
+
+        Flux.fromIterable ( SampleData.carList )
+            .collectMap ( Car::getCarName, Car::getCarMaker )
+            .subscribe (System.out::println);
     }
 }
