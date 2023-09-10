@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -21,18 +22,9 @@ import static java.time.Duration.ofMillis;
 @Slf4j
 public class TestOperator {
     public static void main ( String[] args ) {
-        Flux <CarMaker> flux1 =
-                Flux.fromArray ( SampleData.carMakers )
-                    .subscribeOn ( Schedulers.immediate () )
-                    .delaySequence ( ofMillis ( 500 ) )
-                    .doOnNext ( data -> log.info ( "Flux1 : {}", data ) );
-        Flux <CarMaker> flux2 =
-                Flux.fromArray ( SampleData.carMakersDuplicated )
-                    .delaySequence ( ofMillis ( 1000 ) )
-                    .doOnNext ( data -> log.info ( "Flux2 : {}", data ) );
-        Mono.sequenceEqual ( flux1, flux2 )
-            .subscribe ( data -> log.info ( "{}", data ) );
-        TimeUtil.sleep ( 2000 );
+        Flux.range ( 1, 10 )
+            .sort ( Comparator.reverseOrder () )
+            .reduce ( (acc, curr) -> acc - curr )
+            .subscribe ( result -> log.info ( "{}", result ) );
     }
-
 }
