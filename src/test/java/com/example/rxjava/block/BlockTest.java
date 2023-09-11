@@ -4,6 +4,8 @@ import com.example.rxjava.example.common.Car;
 import com.example.rxjava.example.common.CarMaker;
 import com.example.rxjava.example.common.SampleData;
 import com.example.rxjava.example.common.SampleFlux;
+import com.example.rxjava.example.utils.LogType;
+import com.example.rxjava.example.utils.Logger;
 import com.example.rxjava.example.utils.TimeUtil;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
@@ -32,12 +34,19 @@ public class BlockTest {
     }
 
     @Test
-    public void getSalesOfBranchAFirstTest(){
-        fromArray (SampleData.carMakersDuplicated)
-                .subscribeOn ( Schedulers.computation () )
-                .filter(carMaker -> carMaker.equals(CarMaker.CHEVROLET))
-                .test()
-                .awaitDone(1L, TimeUnit.MILLISECONDS)
-                .assertValues(CarMaker.CHEVROLET, CarMaker.CHEVROLET);
+    public void getSalesOfBranchAFirstTest() throws InterruptedException {
+        boolean result = Observable.interval(200L, TimeUnit.MILLISECONDS)
+                                   .doOnNext(data -> Logger.log(LogType.DO_ON_NEXT, data))
+                                   .map(data -> {
+                                       if(data == 2)
+                                           throw new RuntimeException("Error happened");
+                                       return data;
+                                   })
+                                   .doOnComplete(() -> Logger.log(LogType.DO_ON_COMPLETE))
+                                   .doOnError(error -> Logger.log(LogType.DO_ON_ERROR, error.getMessage()))
+                                   .test()
+                                   .awaitCount(5)
+                                   .isTerminated();
+        assertThat(result, is(true));
     }
 }
